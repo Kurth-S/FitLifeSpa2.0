@@ -1,5 +1,5 @@
 package com.FitLifSpa.usuario_vm.Controller;
-import com.FitLifSpa.usuario_vm.Model.UsuarioModel;
+import com.FitLifSpa.usuario_vm.Model.Usuario;
 import com.FitLifSpa.usuario_vm.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,8 +17,8 @@ public class UsuarioController {
 
     // Listar todos los usuarios
     @GetMapping
-    public ResponseEntity<List<UsuarioModel>> listar() {
-        List<UsuarioModel> usuarioModels = usuarioService.findAll();
+    public ResponseEntity<List<Usuario>> listar() {
+        List<Usuario> usuarioModels = usuarioService.findAll();
         if (usuarioModels.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -27,19 +27,19 @@ public class UsuarioController {
 
     // Guardar un nuevo usuario
     @PostMapping
-    public ResponseEntity<UsuarioModel> guardar(@RequestBody UsuarioModel usuarioModel) {
-        if (usuarioModel.getRun() == null || usuarioModel.getNombre() == null || usuarioModel.getContraseña() == null) {
+    public ResponseEntity<Usuario> guardar(@RequestBody Usuario usuarioModel) {
+        if (usuarioModel.getRun() == null || usuarioModel.getNombre() == null || usuarioModel.getPassword() == null) {
             return ResponseEntity.badRequest().build();
         }
-        UsuarioModel usuarioNuevo = usuarioService.save(usuarioModel);
+        Usuario usuarioNuevo = usuarioService.save(usuarioModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioNuevo);
     }
 
     // Buscar un usuario por ID
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioModel> buscar(@PathVariable Integer id) {
+    public ResponseEntity<Usuario> buscar(@PathVariable Integer id) {
         try {
-            UsuarioModel usuarioModel = usuarioService.findById(id);
+            Usuario usuarioModel = usuarioService.findById(id);
             return ResponseEntity.ok(usuarioModel);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
@@ -48,13 +48,13 @@ public class UsuarioController {
 
     // Actualizar un usuario existente
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioModel> actualizar(@PathVariable Integer id, @RequestBody UsuarioModel usuarioModel) {
+    public ResponseEntity<Usuario> actualizar(@PathVariable Integer id, @RequestBody Usuario usuarioModel) {
         try {
-            UsuarioModel usu = usuarioService.findById(id);
+            Usuario usu = usuarioService.findById(id);
             if (usu != null) {
                 usu.setRun(usuarioModel.getRun());
                 usu.setNombre(usuarioModel.getNombre());
-                usu.setContraseña(usuarioModel.getContraseña());
+                usu.setPassword(usuarioModel.getPassword());
 
                 usuarioService.save(usu);
                 return ResponseEntity.ok(usu);
